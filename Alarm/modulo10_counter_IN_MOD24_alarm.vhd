@@ -29,16 +29,16 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity modulo10_counter_MOD24 is
+entity modulo10_counter_MOD24_alarm is
   Port(clk : in std_logic;
        reset : in std_logic;
 		 swreset : in std_logic;
 		 ce : in std_logic;
 		 dataout : out std_logic_vector(3 downto 0);
 		 tc : out std_logic);
-end modulo10_counter_MOD24;
+end modulo10_counter_MOD24_alarm;
 
-architecture Behavioral of modulo10_counter_MOD24 is
+architecture Behavioral of modulo10_counter_MOD24_alarm is
 signal cnt : std_logic_vector(3 downto 0);
 
 begin
