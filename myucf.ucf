@@ -1,0 +1,22 @@
+NET "clk" LOC = "V10";
+NET "reset" LOC = "T9" ;
+NET "ce" LOC = "T10";
+NET "tc" LOC = "U16";
+NET "set_flag_params(1)" LOC = "T5";
+NET "set_flag_params(0)" LOC = "V8";
+NET "toggle" LOC = "C9";
+
+
+NET "anode(0)" LOC = "N16";  
+NET "anode(1)" LOC = "N15";  
+NET "anode(2)" LOC = "P18"; 
+NET "anode(3)" LOC = "P17";   
+
+
+NET "seg(0)" LOC = "T17"; 
+NET "seg(1)" LOC = "T18"; 
+NET "seg(2)" LOC = "U17"; 
+NET "seg(3)" LOC = "U18"; 
+NET "seg(4)" LOC = "M14"; 
+NET "seg(5)" LOC = "N14"; 
+NET "seg(6)" LOC = "L14"; 
