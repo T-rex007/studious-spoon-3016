@@ -33,7 +33,7 @@ entity comparator_16bits is
   Port(A : in std_logic_vector(15 downto 0);
        B : in std_logic_vector(15 downto 0);
 		 A_equal_B : out std_logic);
-end comparator_3bits;
+end comparator_16bits;
 
 architecture Behavioral of comparator_16bits is
 begin

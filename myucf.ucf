@@ -4,6 +4,8 @@ NET "ce" LOC = "T10";
 NET "tc" LOC = "U16";
 NET "set_flag_params(1)" LOC = "T5";
 NET "set_flag_params(0)" LOC = "V8";
+NET "AlarmEnable" LOC = "U8";
+NET "done" LOC = "C4";
 NET "toggle" LOC = "C9";
 
 

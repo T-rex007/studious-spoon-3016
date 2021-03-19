@@ -34,9 +34,11 @@ entity hour24_timer_main is
         reset : in std_logic;
 		ce : in std_logic;
 		toggle : in  STD_LOGIC;
+		done  : in  STD_LOGIC;
 		set_flag_params : in  STD_LOGIC_VECTOR( 1 downto 0);
 		seg : out std_logic_vector(6 downto 0);
 		anode : inout std_logic_vector(3 downto 0);
+		AlarmEnable : in std_logic;
 		blink_tc : out std_logic;
 		tc : out std_logic);
 end hour24_timer_main;
@@ -59,19 +61,22 @@ end component;
 component TimeModule is
   	Port(clk_1Hz : in std_logic;
        	clk_1kHz: std_logic;
-		reset : in std_logic;
-        toggle : in std_logic;
-		done : std_logic;
-        set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
-		AlarmOn : in std_logic;
-		timeout : out std_logic_vector(15 downto 0);
-		tc : out std_logic);
-end component;;
+			reset : in std_logic;
+			toggle : in std_logic;
+			done : in std_logic;
+			AlarmEnable : in std_logic;
+			ce : in std_logic;
+			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			AlarmOn : in std_logic;
+			AlarmTime : out std_logic_vector(15 downto 0);
+			timeout : out std_logic_vector(15 downto 0);
+			tc : out std_logic);
+end component;
 
 component time_multiplexer_4digit
   Port(clk : in std_logic; --multiplexing clock(1 kHz)      
        	reset : in std_logic; -- reset signal 
-		display_value : in std_logic_vector(15 downto 0); --BCD digits to be displayed
+			display_value : in std_logic_vector(15 downto 0); --BCD digits to be displayed
        	seg : out std_logic_vector(6 downto 0); --7 cathodes
       	anode : inout std_logic_vector(3 downto 0));--selection of the 4 7-segnment displays
 end component;
@@ -108,8 +113,10 @@ signal data_out_sig0 : std_logic_vector(7 downto 0);
 signal data_out_sig1 : std_logic_vector(7 downto 0);
 signal display_value_sig : std_logic_vector(15 downto 0);
 signal display_value_sig1 : std_logic_vector(15 downto 0);
+signal alarm_time_value_sig : std_logic_vector(15 downto 0);
+signal time_value_sig : std_logic_vector(15 downto 0);
+signal alarm_flag_sig : std_logic;
 signal set_flag_params_sig : std_logic;
-
 signal display_blank_val : std_logic_vector(15 downto 0);
 signal blank_sel_sig : std_logic;
 signal blank_reset : std_logic;
@@ -117,7 +124,7 @@ signal toggle_sig : std_logic;
 
 begin
 display_blank_val <= "1111111111111111";
-blank_reset <= not (set_flag_params(0) or set_flag_params(1));
+blank_reset <= not(set_flag_params(0) or set_flag_params(1) or alarm_flag_sig or AlarmEnable) ;
 
 cop1 : FrequencyDivider1kHz
 	Port map(RESET => reset, 
@@ -129,16 +136,19 @@ cop2 : FrequencyDivider1Hz
 		clk => clk,
 		clk_1Hz => clk_1Hz);
 		
-cop3 : TimeModule is
-  	Port map(clk_1Hz => clk_1Hz;
-       	clk_1kHz => clk_1kHz;
-		reset => reset;
-        toggle => toggle_sig;
-		done => done;
-        set_flag_params => set_flag_params;
-		AlarmOn  => alarm_flag_sig;
-		timeout =>display_value_sig ;
-		tc => tc);
+cop3 : TimeModule 
+  	Port map(clk_1Hz => clk_1Hz,
+       	clk_1kHz => clk_1kHz,
+			reset => reset,
+			toggle => toggle_sig,
+			done => done,
+			AlarmEnable => AlarmEnable,
+			ce => ce ,
+			set_flag_params => set_flag_params,
+			AlarmOn  => alarm_flag_sig,
+			AlarmTime => alarm_time_value_sig,
+			timeout =>time_value_sig,
+			tc => tc);
 
 cop4 : time_multiplexer_4digit
   	port map(clk =>clk_1kHz ,      
@@ -166,4 +176,9 @@ cop7 : modulo2_counter
 		dataout => blank_sel_sig,
 		tc => blink_tc);
 
+cop8 : multiplexer16bit_2to1 
+  	port map(A => time_value_sig , 
+        B => alarm_time_value_sig, 
+		sel => AlarmEnable,
+		O => display_value_sig);
 end Behavioral;

@@ -35,7 +35,7 @@ entity modulo60_counter_alarm is
 		 ce : in std_logic;
 		 dataout : out std_logic_vector(7 downto 0);
 		 tc : out std_logic);
-end modulo60_counter;
+end modulo60_counter_alarm;
 
 architecture Behavioral of modulo60_counter_alarm is
 ----------------------components----------------------

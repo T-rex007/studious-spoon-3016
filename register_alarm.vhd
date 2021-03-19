@@ -38,7 +38,7 @@ entity Register_With_16x16_bits_alarm is
 end Register_With_16x16_bits_alarm;
 
 architecture Behavioral of Register_With_16x16_bits_alarm is
-signal reg : STD_LOGIC_VECTOR(15 downto 0) := X'00';
+signal reg : STD_LOGIC_VECTOR(15 downto 0) := X"0000";
 begin
 	process(clk, clr, load)
 	begin

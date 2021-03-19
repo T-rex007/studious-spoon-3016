@@ -32,25 +32,24 @@ architecture Behavioral of AlarmSettingModule is
 
 component modulo24_counter_alarm
     Port(reset : in  STD_LOGIC;
-        ce : in  STD_LOGIC;
-		toggle : in STD_LOGIC;
-		dout: out  STD_LOGIC_VECTOR (7 downto 0));
+			ce : in  STD_LOGIC;
+			toggle : in STD_LOGIC;
+			tc : in std_logic;
+			dout: out  STD_LOGIC_VECTOR (7 downto 0));
 end component;
 
 component modulo60_counter_alarm
   Port(clk : in std_logic;
-        reset : in std_logic;
-		swreset : in std_logic;
+		reset : in std_logic;
 		ce : in std_logic;
-		dout : out std_logic_vector(7 downto 0));
+		dataout : out std_logic_vector(7 downto 0);
+		tc : in std_logic);
 end component;
 
 component modulo2_counter_alarm 
   Port(clk : in std_logic;
-        reset : in std_logic;
-		ce : in std_logic;
-		dataout : out std_logic;
-		tc : out std_logic);
+		reset : in std_logic;
+		dataout : out std_logic);
 end component;
 
 component debounce_1bit
@@ -62,10 +61,10 @@ end component;
 
 component Register_With_16x16_bits_alarm is
     Port(D : in  STD_LOGIC_VECTOR(15 downto 0);
-           clk : in  STD_LOGIC;
-           load : in  STD_LOGIC;
-           clr : in  STD_LOGIC;
-           outputs : out  STD_LOGIC_VECTOR (15 downto 0));
+      clk : in  STD_LOGIC;
+      load : in  STD_LOGIC;
+      clr : in  STD_LOGIC;
+		outputs : out  STD_LOGIC_VECTOR (15 downto 0));
 end component;
 -----------------------signals------------------------
 
@@ -73,7 +72,6 @@ signal mod60_tc : std_logic;
 signal mod24_tc : std_logic;
 
 signal clk_dummy : std_logic;
-signal swreset_sig : std_logic;
 signal sigdummy1 : std_logic;
 
 signal mod24_sel_enable : std_logic;
@@ -89,17 +87,16 @@ begin
 -- tc <= mod60_tc and mod24_tc;
 -- Used Disable counter
 clk_dummy <= '0';
-swreset <= '0';
 ce_sel_sig_60 <= not(ce_sel_sig);
-cop1_A : modulo60_counter
+
+cop1_A : modulo60_counter_alarm
     port map(clk => toggle,
         reset => reset,
-		swreset => swreset_sig,
-		ce => ce_sel_sig_60,
-		dataout => alarm_value_sig(7 downto 0),
-		tc => mod60_tc);
+			ce => ce_sel_sig_60,
+			dataout => alarm_value_sig(7 downto 0),
+			tc => mod60_tc);
 
-cop2_A : AlarmModulo24_counter
+cop2_A : modulo24_counter_alarm
     Port map(reset => reset,
         ce => ce_sel_sig,
         toggle => toggle,
@@ -107,8 +104,8 @@ cop2_A : AlarmModulo24_counter
         dout => alarm_value_sig(15 downto 8));
 
 cop3_A : modulo2_counter_alarm 
-  	Port map(clk => done_sig;
-        reset => reset;
+  	Port map(clk => done_sig,
+        reset => reset,
 		dataout => ce_sel_sig);
 
 cop4_A : debounce_1bit
@@ -122,7 +119,5 @@ cop5_A : Register_With_16x16_bits_alarm
         	clk => clk,
            	load => AlarmEnable,
            	clr => '0',
-           	outputs  => AlarmValue ;
-end component;
-
+           	outputs  => AlarmValue);
 end Behavioral;

@@ -32,14 +32,16 @@ use UNISIM.VComponents.all;
 entity TimeModule is
   Port(clk_1Hz : in std_logic;
        	clk_1kHz: std_logic;
-		reset : in std_logic;
-        toggle : in std_logic;
-		done : std_logic;
-		ce : std_logic;
-        set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
-		AlarmOn : in std_logic;
-		timeout : out std_logic_vector(15 downto 0);
-		tc : out std_logic);
+			reset : in std_logic;
+			toggle : in std_logic;
+			AlarmEnable : in std_logic;
+			done : std_logic;
+			ce : std_logic;
+			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			AlarmOn : out std_logic;
+			timeout : out std_logic_vector(15 downto 0);
+			AlarmTime : out std_logic_vector(15 downto 0);
+			tc : out std_logic);
 end TimeModule;
 
 architecture Behavioral of TimeModule is
@@ -57,11 +59,11 @@ end component;
 component hour24_timer is
   Port(clk : in std_logic;
        	reset : in std_logic;
-		ce : in std_logic;
-        toggle : in std_logic;
-        set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
-		timeout : out std_logic_vector(15 downto 0);
-		tc : out std_logic);
+			ce : in std_logic;
+			toggle : in std_logic;
+			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			timeout : out std_logic_vector(15 downto 0);
+			tc : out std_logic);
 end component;
 
 component comparator_16bits 
@@ -78,30 +80,27 @@ signal time_value_sig : std_logic_vector(15 downto 0);
 begin
 
 cop1_TM : AlarmSettingModule 
-	Port map(clk =>clk_1kHz;
-		reset => reset;
-		done => done;
-		AlarmEnable => AlarmEnable;
-        toggle => toggle;
-		AlarmValue => alarm_value_sig;
+	Port map(clk =>clk_1kHz,
+			reset => reset,
+			done => done,
+			AlarmEnable => AlarmEnable,
+			toggle => toggle,
+			AlarmValue => alarm_value_sig);
 
 cop2_TM : hour24_timer
-  Port(clk => clk_1Hz;
-       	reset  => reset;
-		ce =>ce;
-        toggle => toggle;
-        set_flag_params =>set_flag_params;
-		timeout =>time_value_sig;
-		tc =>tc);
+  Port map(clk => clk_1Hz,
+       	reset  => reset,
+			ce =>ce,
+			toggle => toggle,
+			set_flag_params =>set_flag_params,
+			timeout =>time_value_sig,
+			tc =>tc);
 
 cop3_TM  : comparator_16bits
-  Port(A =>alarm_value_sig;
-       	B => time_value_sig;
-		A_equal_B => AlarmOn);
+	Port map(A =>alarm_value_sig,
+			B => time_value_sig,
+			A_equal_B => AlarmOn);
 
-
-
-
-
-
+timeout <=  time_value_sig;
+AlarmTime <= alarm_value_sig;
 end Behavioral;
