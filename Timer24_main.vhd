@@ -55,15 +55,18 @@ component FrequencyDivider1Hz
 		clk_1Hz : out  STD_LOGIC);
 end component;
 
-component hour24_timer
-  Port(clk : in std_logic;
+
+component TimeModule is
+  	Port(clk_1Hz : in std_logic;
+       	clk_1kHz: std_logic;
 		reset : in std_logic;
-		ce : in std_logic;
-		toggle : in  STD_LOGIC;
-		set_flag_params : in   STD_LOGIC_VECTOR( 1 downto 0);
+        toggle : in std_logic;
+		done : std_logic;
+        set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+		AlarmOn : in std_logic;
 		timeout : out std_logic_vector(15 downto 0);
 		tc : out std_logic);
-end component;
+end component;;
 
 component time_multiplexer_4digit
   Port(clk : in std_logic; --multiplexing clock(1 kHz)      
@@ -126,13 +129,15 @@ cop2 : FrequencyDivider1Hz
 		clk => clk,
 		clk_1Hz => clk_1Hz);
 		
-cop3 : hour24_timer
-  	port map(clk => clk_1Hz,
-		reset => reset,
-		ce => ce,
-		toggle => toggle_sig,
-		set_flag_params => set_flag_params,
-		timeout => display_value_sig,
+cop3 : TimeModule is
+  	Port map(clk_1Hz => clk_1Hz;
+       	clk_1kHz => clk_1kHz;
+		reset => reset;
+        toggle => toggle_sig;
+		done => done;
+        set_flag_params => set_flag_params;
+		AlarmOn  => alarm_flag_sig;
+		timeout =>display_value_sig ;
 		tc => tc);
 
 cop4 : time_multiplexer_4digit

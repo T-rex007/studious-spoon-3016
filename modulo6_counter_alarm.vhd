@@ -22,29 +22,38 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
+---- Uncomment the following library declaration if instantiating
+---- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
 
-entity modulo2_counter_alarm is
+entity modulo6_counter_alarm is
   Port(clk : in std_logic;
-        reset : in std_logic;
-		dataout : out std_logic);
-end modulo2_counter_alarm;
+       reset : in std_logic;
+		 ce : in std_logic;
+		 dataout : out std_logic_vector(3 downto 0);
+		 tc : out std_logic);
+end modulo6_counter_alarm;
 
-architecture Behavioral of modulo2_counter_alarm is
-signal cnt : std_logic;
+architecture Behavioral of modulo6_counter_alarm is
+signal cnt : std_logic_vector(3 downto 0);
 
 begin
-  process(clk,reset,cnt)
+  process(clk,reset,ce,cnt)
     begin
 	   if(reset = '1')then
-		  cnt <= '0';
+		  cnt <= "0000";
       elsif(clk'event and clk = '1') then
-		    if(cnt = '1')then
-		      cnt <= '0';
+        if(ce = '1')then
+		    if(cnt = "0101")then
+		      cnt <= "0000";
 		    else
-			   cnt <= '1';
+			   cnt <= cnt + 1;
 		    end if;
+		  end if;
 	   end if;
   end process;
 
 dataout <= cnt;
+tc <= (not cnt(3)) and cnt(2) and (not cnt(1)) and cnt(0); 
 end Behavioral;
