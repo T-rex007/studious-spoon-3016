@@ -37,7 +37,8 @@ entity TimeModule is
 			AlarmEnable : in std_logic;
 			done : std_logic;
 			ce : std_logic;
-			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			hrSetEnable: in std_logic;
+			minSetEnable: in std_logic;
 			AlarmOn : out std_logic;
 			timeout : out std_logic_vector(15 downto 0);
 			AlarmTime : out std_logic_vector(15 downto 0);
@@ -61,7 +62,8 @@ component hour24_timer is
        	reset : in std_logic;
 			ce : in std_logic;
 			toggle : in std_logic;
-			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			hrSetEnable: in std_logic;
+			minSetEnable: in std_logic;
 			timeout : out std_logic_vector(15 downto 0);
 			tc : out std_logic);
 end component;
@@ -89,10 +91,11 @@ cop1_TM : AlarmSettingModule
 
 cop2_TM : hour24_timer
   Port map(clk => clk_1Hz,
-       	reset  => reset,
+       		reset  => reset,
 			ce =>ce,
 			toggle => toggle,
-			set_flag_params =>set_flag_params,
+			hrSetEnable =>	hrSetEnable,
+			minSetEnable => minSetEnable,
 			timeout =>time_value_sig,
 			tc =>tc);
 

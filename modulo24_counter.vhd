@@ -34,7 +34,7 @@ entity modulo24_counter is
             reset : in  STD_LOGIC;
             ce : in  STD_LOGIC;
 			toggle : in  STD_LOGIC;
-			set_flag_params : in  STD_LOGIC_VECTOR( 1 downto 0);
+			hrSetEnable : in  STD_LOGIC;
 			tc : out STD_LOGIC;
 			timeout: out  STD_LOGIC_VECTOR (7 downto 0));
 end modulo24_counter;
@@ -64,7 +64,7 @@ end component;
 component multiplexer_2to1_hr is
   Port(A : in std_logic;
         B : in std_logic;
-		sel : in std_logic_vector(1 downto 0);
+		sel : in std_logic;
 		O : out std_logic);
 end component;
 
@@ -110,7 +110,7 @@ cop3 : modulo3_counter
 cop4 : multiplexer_2to1_hr 
   	port map(A => clk, 
         B => toggle, 
-		sel => set_flag_params,
+		sel => hrSetEnable,
 		O => clk_sig);
 
 end Behavioral;

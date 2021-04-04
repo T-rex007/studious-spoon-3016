@@ -34,7 +34,7 @@ component modulo24_counter_alarm
     Port(reset : in  STD_LOGIC;
 			ce : in  STD_LOGIC;
 			toggle : in STD_LOGIC;
-			tc : in std_logic;
+			tc : out std_logic;
 			dout: out  STD_LOGIC_VECTOR (7 downto 0));
 end component;
 
@@ -43,7 +43,7 @@ component modulo60_counter_alarm
 		reset : in std_logic;
 		ce : in std_logic;
 		dataout : out std_logic_vector(7 downto 0);
-		tc : in std_logic);
+		tc : out std_logic);
 end component;
 
 component modulo2_counter_alarm 

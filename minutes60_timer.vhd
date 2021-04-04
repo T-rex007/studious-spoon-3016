@@ -32,8 +32,8 @@ use UNISIM.VComponents.all;
 entity minute60_timer is
     Port ( clk : in  STD_LOGIC;
            reset : in  STD_LOGIC;
-           ce : in  STD_LOGIC;
-			  set_flag_params : in STD_LOGIC_VECTOR(1 downto 0);
+           	ce : in  STD_LOGIC;
+		   	minSetEnable: in std_logic;
 			  toggle : in STD_LOGIC;
 			  tc : out STD_LOGIC;
 			  timeout: out  STD_LOGIC_VECTOR (15 downto 0));
@@ -54,7 +54,7 @@ end component;
 component multiplexer_2to1_min is
   Port(A : in std_logic;
         B : in std_logic;
-		sel : in std_logic_vector(1 downto 0);
+		sel : in std_logic;
 		O : out std_logic);
 end component;
 
@@ -92,7 +92,7 @@ port map(clk => clk_sig,
 cop4 : multiplexer_2to1_min 
   	port map(A => mod60_2_clk, 
         B => toggle, 
-		sel => set_flag_params,
+		sel => minSetEnable,
 		O => clk_sig);
 end Behavioral;
 

@@ -2,9 +2,10 @@ NET "clk" LOC = "V10";
 NET "reset" LOC = "T9" ;
 NET "ce" LOC = "T10";
 NET "tc" LOC = "U16";
-NET "set_flag_params(1)" LOC = "T5";
-NET "set_flag_params(0)" LOC = "V8";
-NET "AlarmEnable" LOC = "U8";
+NET "inputs(0)" LOC = "T5";
+NET "inputs(1)" LOC = "V8";
+NET "inputs(2)" LOC = "U8";
+NET "inputs(3)" LOC = "N8";
 NET "done" LOC = "C4";
 NET "toggle" LOC = "C9";
 

@@ -34,7 +34,8 @@ entity hour24_timer is
        reset : in std_logic;
 		 ce : in std_logic;
          toggle : in std_logic;
-         set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+		 hrSetEnable: in std_logic;
+		 minSetEnable: in std_logic;
 		 timeout : out std_logic_vector(15 downto 0);
 		 tc : out std_logic);
 end hour24_timer;
@@ -43,21 +44,21 @@ architecture Behavioral of hour24_timer is
 ----------------------components----------------------
 
 component minute60_timer is
-    Port( clk : in  STD_LOGIC;
-            reset : in  STD_LOGIC;
-            ce : in  STD_LOGIC;
+    Port(clk : in  STD_LOGIC;
+         reset : in  STD_LOGIC;
+         ce : in  STD_LOGIC;
 			toggle : in  STD_LOGIC;
-			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			minSetEnable: in std_logic;
 			tc : out STD_LOGIC;
 			timeout: out  STD_LOGIC_VECTOR (15 downto 0));
 end component;
 
 component modulo24_counter
-    Port( clk : in  STD_LOGIC;
-            reset : in  STD_LOGIC;
-            ce : in  STD_LOGIC;
+    Port(clk : in  STD_LOGIC;
+         reset : in  STD_LOGIC;
+         ce : in  STD_LOGIC;
 			toggle : in STD_LOGIC;
-			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
+			hrSetEnable: in std_logic;
 			tc : out STD_LOGIC;
 			timeout: out  STD_LOGIC_VECTOR (7 downto 0));
 end component;
@@ -79,7 +80,7 @@ cop1 : minute60_timer
             reset => reset,
             ce => ce,
 			toggle => toggle,
-			set_flag_params => set_flag_params,
+			minSetEnable => minSetEnable,
 			tc => mod60_tc,
 			timeout => minutes60_sig);
 
@@ -94,7 +95,7 @@ cop3 : modulo24_counter
             reset => reset,
             ce => ce,
 			toggle => toggle,
-			set_flag_params => set_flag_params,
+			hrSetEnable => hrSetEnable,
 			tc => mod24_tc,
 			timeout => timeout(15 downto 8));
 end Behavioral;

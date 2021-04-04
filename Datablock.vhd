@@ -29,21 +29,22 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity hour24_timer_main is
+entity DataBlock is
   Port(clk : in std_logic;
         reset : in std_logic;
 		ce : in std_logic;
 		toggle : in  STD_LOGIC;
 		done  : in  STD_LOGIC;
-		set_flag_params : in  STD_LOGIC_VECTOR( 1 downto 0);
+		hrSetEnable: in std_logic;
+		minSetEnable: in std_logic;
 		seg : out std_logic_vector(6 downto 0);
 		anode : inout std_logic_vector(3 downto 0);
 		AlarmEnable : in std_logic;
 		blink_tc : out std_logic;
 		tc : out std_logic);
-end hour24_timer_main;
+end DataBlock;
 
-architecture Behavioral of hour24_timer_main is
+architecture Behavioral of DataBlock is
 ----------------------components----------------------
 component FrequencyDivider1kHz
 	Port (RESET : in STD_LOGIC; 
@@ -66,8 +67,9 @@ component TimeModule is
 			done : in std_logic;
 			AlarmEnable : in std_logic;
 			ce : in std_logic;
-			set_flag_params : in  STD_LOGIC_VECTOR(1 downto 0);
-			AlarmOn : in std_logic;
+			hrSetEnable: in std_logic;
+			minSetEnable: in std_logic;
+			AlarmOn : out std_logic;
 			AlarmTime : out std_logic_vector(15 downto 0);
 			timeout : out std_logic_vector(15 downto 0);
 			tc : out std_logic);
@@ -124,7 +126,7 @@ signal toggle_sig : std_logic;
 
 begin
 display_blank_val <= "1111111111111111";
-blank_reset <= not(set_flag_params(0) or set_flag_params(1) or alarm_flag_sig or AlarmEnable) ;
+blank_reset <= not(hrSetEnable or minSetEnable or alarm_flag_sig or AlarmEnable) ;
 
 cop1 : FrequencyDivider1kHz
 	Port map(RESET => reset, 
@@ -144,7 +146,8 @@ cop3 : TimeModule
 			done => done,
 			AlarmEnable => AlarmEnable,
 			ce => ce ,
-			set_flag_params => set_flag_params,
+			hrSetEnable => hrSetEnable,
+			minSetEnable => minSetEnable,
 			AlarmOn  => alarm_flag_sig,
 			AlarmTime => alarm_time_value_sig,
 			timeout =>time_value_sig,

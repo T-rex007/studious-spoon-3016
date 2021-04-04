@@ -32,7 +32,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity multiplexer_2to1_min is
   Port(A : in std_logic;
         B : in std_logic;
-		sel : in std_logic_vector(1 downto 0);
+		sel : in std_logic;
 		O : out std_logic);
 end multiplexer_2to1_min;
 
@@ -41,9 +41,9 @@ begin
 	process(A, B, sel)
     begin
 	    case sel is
-		  	when "00" =>
+		  	when '0' =>
 		    	O <= A;	--connect A to O
-		  	when "01" =>
+		  	when '1' =>
 		    	O <= B;	--connect B to O
         	when others =>
 		    	O <= '0';
