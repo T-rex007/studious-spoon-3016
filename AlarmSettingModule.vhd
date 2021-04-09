@@ -23,7 +23,7 @@ entity AlarmSettingModule is
 		reset : in std_logic;
 		done : in std_logic;
 		AlarmEnable : std_logic;
-        toggle : in std_logic;
+        increment : in std_logic;
 		AlarmValue : out std_logic_vector(15 downto 0));
 end AlarmSettingModule;
 
@@ -33,7 +33,7 @@ architecture Behavioral of AlarmSettingModule is
 component modulo24_counter_alarm
     Port(reset : in  STD_LOGIC;
 			ce : in  STD_LOGIC;
-			toggle : in STD_LOGIC;
+			increment : in STD_LOGIC;
 			tc : out std_logic;
 			dout: out  STD_LOGIC_VECTOR (7 downto 0));
 end component;
@@ -90,7 +90,7 @@ clk_dummy <= '0';
 ce_sel_sig_60 <= not(ce_sel_sig);
 
 cop1_A : modulo60_counter_alarm
-    port map(clk => toggle,
+    port map(clk => increment,
         reset => reset,
 			ce => ce_sel_sig_60,
 			dataout => alarm_value_sig(7 downto 0),
@@ -99,7 +99,7 @@ cop1_A : modulo60_counter_alarm
 cop2_A : modulo24_counter_alarm
     Port map(reset => reset,
         ce => ce_sel_sig,
-        toggle => toggle,
+        increment => increment,
         tc => mod24_tc,
         dout => alarm_value_sig(15 downto 8));
 

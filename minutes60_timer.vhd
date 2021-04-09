@@ -34,7 +34,7 @@ entity minute60_timer is
            reset : in  STD_LOGIC;
            	ce : in  STD_LOGIC;
 		   	minSetEnable: in std_logic;
-			  toggle : in STD_LOGIC;
+			  increment : in STD_LOGIC;
 			  tc : out STD_LOGIC;
 			  timeout: out  STD_LOGIC_VECTOR (15 downto 0));
 end minute60_timer;
@@ -91,7 +91,7 @@ port map(clk => clk_sig,
 
 cop4 : multiplexer_2to1_min 
   	port map(A => mod60_2_clk, 
-        B => toggle, 
+        B => increment, 
 		sel => minSetEnable,
 		O => clk_sig);
 end Behavioral;

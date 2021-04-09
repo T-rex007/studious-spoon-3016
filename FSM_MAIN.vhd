@@ -33,7 +33,7 @@ entity FSM_Module is
         Port(clk : in std_logic;
         reset : in std_logic;
         ce : in std_logic;
-        toggle : in  STD_LOGIC;
+        increment : in  STD_LOGIC;
         done  : in  STD_LOGIC;
 		  alarmSettingMode : in STD_LOGIC;
 		  minSettingMode : in STD_LOGIC;
@@ -46,8 +46,6 @@ end FSM_Module;
 
 architecture Behavioral of FSM_Module is
 ----------------------components----------------------
-
-
 component FSM_Controller
 	Port(alarmSettingMode : in STD_LOGIC;
 		  minSettingMode : in STD_LOGIC;
@@ -64,7 +62,7 @@ component DataBlock
         Port(clk : in std_logic;
         reset : in std_logic;
         ce : in std_logic;
-        toggle : in  STD_LOGIC;
+        increment : in  STD_LOGIC;
         done  : in  STD_LOGIC;
         hrSetEnable : in STD_LOGIC;
         minSetEnable : in STD_LOGIC;
@@ -84,7 +82,6 @@ signal reset_sig : std_logic;
 signal hr_sig : std_logic;
 signal min_sig : std_logic;
 begin
-
         
 cop1_FSM : FSM_Controller
 	Port map(alarmSettingMode => alarmSettingMode,
@@ -101,7 +98,7 @@ cop2_FSM : DataBlock
         Port map(clk => clk,
         reset => reset,
         ce => ce,
-        toggle  =>toggle,
+        increment  =>increment,
         done   =>done,
         hrSetEnable => hr_sig,
         minSetEnable =>min_sig ,
@@ -110,5 +107,5 @@ cop2_FSM : DataBlock
         AlarmEnable =>alarmSetEnable_sig,
         blink_tc  =>blink_tc,
         tc  => tc);
-
 end Behavioral;
+

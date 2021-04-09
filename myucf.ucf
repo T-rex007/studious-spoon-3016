@@ -2,12 +2,12 @@ NET "clk" LOC = "V10";
 NET "reset" LOC = "T9" ;
 NET "ce" LOC = "T10";
 NET "tc" LOC = "U16";
-NET "inputs(0)" LOC = "T5";
-NET "inputs(1)" LOC = "V8";
-NET "inputs(2)" LOC = "U8";
-NET "inputs(3)" LOC = "N8";
+NET "hrSettingMode" LOC = "T5";
+NET "minSettingMode" LOC = "V8";
+NET "alarmSettingMode" LOC = "U8";
+
 NET "done" LOC = "C4";
-NET "toggle" LOC = "C9";
+NET "increment" LOC = "C9";
 
 
 NET "anode(0)" LOC = "N16";  

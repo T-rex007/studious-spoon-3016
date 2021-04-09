@@ -32,7 +32,7 @@ use UNISIM.VComponents.all;
 entity modulo24_counter_alarm is
     Port (reset : in  STD_LOGIC;
             ce : in  STD_LOGIC;
-			toggle : in  STD_LOGIC;
+			increment : in  STD_LOGIC;
 			tc : out STD_LOGIC;
 			dout: out  STD_LOGIC_VECTOR (7 downto 0));
 end modulo24_counter_alarm;
@@ -78,7 +78,7 @@ swreset_sig <=  temp and  (not osig(3))  and osig(2) and not (osig(1)) and (not 
 dout  <= osig;
 
 cop1 : modulo10_counter_MOD24_alarm
-  port map(clk => toggle,
+  port map(clk => increment,
 		reset => reset,
 		swreset => swreset_sig,
 		ce => ce,
@@ -86,7 +86,7 @@ cop1 : modulo10_counter_MOD24_alarm
 		tc => mod10_1_tc);
 
 cop2 : FDC	--from Unisim Library: uncomment lines 29 - 30
-  port map(C =>toggle,
+  port map(C =>increment,
 		CLR => reset, 
 		D => mod10_1_tc,
 		Q => mod3_2_clk);

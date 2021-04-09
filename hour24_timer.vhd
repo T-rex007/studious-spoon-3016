@@ -33,7 +33,7 @@ entity hour24_timer is
   Port(clk : in std_logic;
        reset : in std_logic;
 		 ce : in std_logic;
-         toggle : in std_logic;
+         increment : in std_logic;
 		 hrSetEnable: in std_logic;
 		 minSetEnable: in std_logic;
 		 timeout : out std_logic_vector(15 downto 0);
@@ -41,13 +41,14 @@ entity hour24_timer is
 end hour24_timer;
 
 architecture Behavioral of hour24_timer is
+
 ----------------------components----------------------
 
 component minute60_timer is
     Port(clk : in  STD_LOGIC;
          reset : in  STD_LOGIC;
          ce : in  STD_LOGIC;
-			toggle : in  STD_LOGIC;
+			increment : in  STD_LOGIC;
 			minSetEnable: in std_logic;
 			tc : out STD_LOGIC;
 			timeout: out  STD_LOGIC_VECTOR (15 downto 0));
@@ -57,7 +58,7 @@ component modulo24_counter
     Port(clk : in  STD_LOGIC;
          reset : in  STD_LOGIC;
          ce : in  STD_LOGIC;
-			toggle : in STD_LOGIC;
+			increment : in STD_LOGIC;
 			hrSetEnable: in std_logic;
 			tc : out STD_LOGIC;
 			timeout: out  STD_LOGIC_VECTOR (7 downto 0));
@@ -68,21 +69,26 @@ end component;
 signal mod60_tc : std_logic;
 signal mod24_tc : std_logic;
 signal mod24_clk : std_logic;
+signal min_ce_sig : std_logic;
+signal hr_ce_sig : std_logic;
 
 signal minutes60_sig : std_logic_vector( 15 downto 0);
 
 begin
 tc <= mod60_tc and mod24_tc;
 
+min_ce_sig <= ce and (not hrSetEnable);
+hr_ce_sig <= ce and (not minSetEnable);
+
 timeout(7 downto 0) <= minutes60_sig(15 downto 8);
 cop1 : minute60_timer
-    Port map( clk => clk,
-            reset => reset,
-            ce => ce,
-			toggle => toggle,
-			minSetEnable => minSetEnable,
-			tc => mod60_tc,
-			timeout => minutes60_sig);
+    Port map(clk => clk,
+             reset => reset,
+             ce => min_ce_sig,
+			    increment => increment,
+			    minSetEnable => minSetEnable,
+			    tc => mod60_tc,
+			    timeout => minutes60_sig);
 
 cop2 : FDC	--from Unisim Library: uncomment lines 29 - 30
     port map(C => clk,
@@ -91,11 +97,11 @@ cop2 : FDC	--from Unisim Library: uncomment lines 29 - 30
 			  Q => mod24_clk);
 
 cop3 : modulo24_counter
-    Port map( clk => mod24_clk,
+    Port map( clk => mod24_clk, 
             reset => reset,
-            ce => ce,
-			toggle => toggle,
-			hrSetEnable => hrSetEnable,
-			tc => mod24_tc,
-			timeout => timeout(15 downto 8));
+            ce => hr_ce_sig,
+			   increment => increment,
+			   hrSetEnable => hrSetEnable,
+			   tc => mod24_tc,
+			   timeout => timeout(15 downto 8));
 end Behavioral;

@@ -30,13 +30,13 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity modulo24_counter is
-    Port ( clk : in  STD_LOGIC;
-            reset : in  STD_LOGIC;
-            ce : in  STD_LOGIC;
-			toggle : in  STD_LOGIC;
-			hrSetEnable : in  STD_LOGIC;
-			tc : out STD_LOGIC;
-			timeout: out  STD_LOGIC_VECTOR (7 downto 0));
+    Port (clk : in  STD_LOGIC;
+          reset : in  STD_LOGIC;
+          ce : in  STD_LOGIC;
+			 increment : in  STD_LOGIC;
+			 hrSetEnable : in  STD_LOGIC;
+			 tc : out STD_LOGIC;
+			 timeout: out  STD_LOGIC_VECTOR (7 downto 0));
 end modulo24_counter;
 
 architecture Behavioral of modulo24_counter is
@@ -73,15 +73,20 @@ signal mod10_1_tc : std_logic;
 signal mod3_2_tc : std_logic;
 signal mod3_2_clk : std_logic;
 signal swreset_sig: std_logic;
+signal swreset_sig_sig: std_logic;
 signal osig : std_logic_vector(7 downto 0);
 signal temp : std_logic;
 signal clk_sig : std_logic;
 
 begin
-tc <= mod3_2_tc and mod10_1_tc;
+tc <= swreset_sig;
 --reset Modulo 24 counter the instant it reaches 24 with software Reset sreset
+
+
+
 temp <=  (not osig(7)) and (not osig(6)) and osig(5) and (not osig(4));
 swreset_sig <=  temp and  (not osig(3))  and osig(2) and not (osig(1)) and (not osig(0));
+
 
 timeout <= osig;
 
@@ -109,8 +114,15 @@ cop3 : modulo3_counter
 
 cop4 : multiplexer_2to1_hr 
   	port map(A => clk, 
-        B => toggle, 
+        B => increment, 
 		sel => hrSetEnable,
 		O => clk_sig);
+
+-- 
+-- cop5 : FDC	--from Unisim Library: uncomment lines 29 - 30
+--  port map(C => clk_1kHz,
+--		CLR => reset, 
+--		D => swreset_sig,
+--		Q => swreset_sig_sig);
 
 end Behavioral;

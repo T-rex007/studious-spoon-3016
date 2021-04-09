@@ -39,6 +39,7 @@ architecture Behavioral of FrequencyDivider1kHz is
 
 signal temp: std_logic := '0';
 constant divider: integer := 50000;
+--constant divider: integer := 5;
 signal count: integer range 1 to divider := 1;
 
 begin

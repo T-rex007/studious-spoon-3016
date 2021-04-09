@@ -40,7 +40,7 @@ architecture Behavioral of modulo3_counter is
 signal cnt : std_logic_vector(3 downto 0);
 
 begin
-  process(clk,reset,ce,cnt)
+  process(clk,reset,ce,cnt,swreset)
     begin
 	   if(reset = '1' or swreset = '1')then
 		  cnt <= "0000";

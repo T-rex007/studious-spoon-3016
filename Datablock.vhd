@@ -33,7 +33,7 @@ entity DataBlock is
   Port(clk : in std_logic;
         reset : in std_logic;
 		ce : in std_logic;
-		toggle : in  STD_LOGIC;
+		increment : in  STD_LOGIC;
 		done  : in  STD_LOGIC;
 		hrSetEnable: in std_logic;
 		minSetEnable: in std_logic;
@@ -61,9 +61,9 @@ end component;
 
 component TimeModule is
   	Port(clk_1Hz : in std_logic;
-       	clk_1kHz: std_logic;
+			clk_1kHz : in std_logic;
 			reset : in std_logic;
-			toggle : in std_logic;
+			increment : in std_logic;
 			done : in std_logic;
 			AlarmEnable : in std_logic;
 			ce : in std_logic;
@@ -122,7 +122,7 @@ signal set_flag_params_sig : std_logic;
 signal display_blank_val : std_logic_vector(15 downto 0);
 signal blank_sel_sig : std_logic;
 signal blank_reset : std_logic;
-signal toggle_sig : std_logic;
+signal increment_sig : std_logic;
 
 begin
 display_blank_val <= "1111111111111111";
@@ -142,7 +142,7 @@ cop3 : TimeModule
   	Port map(clk_1Hz => clk_1Hz,
        	clk_1kHz => clk_1kHz,
 			reset => reset,
-			toggle => toggle_sig,
+			increment => increment_sig,
 			done => done,
 			AlarmEnable => AlarmEnable,
 			ce => ce ,
@@ -163,8 +163,8 @@ cop4 : time_multiplexer_4digit
 cop5 : debounce_1bit
 	Port map(clock => clk,
 		RESET => reset,
-		D_IN => toggle,   
-		Q_OUT => toggle_sig);
+		D_IN => increment,   
+		Q_OUT => increment_sig);
 
 cop6 : multiplexer16bit_2to1 
   	port map(A =>display_value_sig, 
